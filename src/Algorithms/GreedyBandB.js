@@ -4,18 +4,26 @@ import * as _ from "lodash";
 /**
  * Determine the most cost efficient way to exactly fill a Knapsack with a certain weight.
  *
+ * What sort of problems might need this?
+ *
+ * One example is a shopping cart applying bulk discounts. When it gets time to checkout you
+ * need to be able to assign the available discounts against the items in such a way as to
+ * minimise the total purchase cost for the consumer. For instance the consumer wants to buy
+ * X items, with 3 discounts available - a 6-for-4 deal, a 20-for-12 deal, and a 30-for-15 deal.
+ * What is the best way to allocate these deals to the X items being purchased?
+ *
  * For small numbers of deals and items this is a quick problem to solve. But for large inputs
  * and worst-case data it is a computationally difficult problem, a slight variation on the
  * standard Knapsack problem or M-Partition problem.
  *
- * Here we're going to take an optimistic approach and apply a mix of Greedy programming and
- * the branch and bound algorithm, with a depth-first tree walk. Our tree walk will process items
- * *greedily* in order of *ascending cost-per-unit*, which will yield opportunities for branch
- * pruning.
+ * Here we're going to take an optimistic approach and apply a mix of greedy programming and
+ * the branch and bound algorithm, with a depth-first tree walk to fill the knapsack. Our tree
+ * walk will process items *greedily* in order of *ascending cost-per-unit*, which will yield
+ * opportunities for branch pruning.
  *
- * The below code uses a simple recursive tree-walk for readability. The same algorithm could
+ * The below code uses a simple recurson for readability. The same algorithm could
  * be applied without recursion by using a stack, but I think that would be performance
- * overkill and would be hard to read and understand for most code reviewers.
+ * overkill and would be harder to read and understand for most code reviewers.
  *
  * @param {[]} items with cost and weight
  * @param {Number} targetWeight - weight the Knapsack must hold in the end
