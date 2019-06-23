@@ -1,43 +1,22 @@
 
-import * as _ from "lodash";
 import {Product} from "./Product";
+import {Bill} from "./Bill";
 
 
-
-class BillItem {
-    constructor(productCode, price) {
-        this.productCode = productCode;
-        this.price = price;
-        this.discounts = [];
-        this.discountState = {};
-    }
-
-    total() {
-        return this.price - _.sumBy(this.discounts, 'amount');
-    }
-}
-
-
-class Bill {
-    constructor() {
-        this.items = [];
-    }
-
-    add(productCode, price) {
-        this.items.push(
-            new BillItem(productCode, price)
-        );
-    }
-
-    total() {
-        return _.sumBy(this.items, item => item.total());
-    }
-}
-
-
-
+/**
+ * A Checkout tracks a users product selections and allows calculation
+ * of the associated cost.
+ *
+ * Currently it's a simple in-memory implementation, but we could easily utilise
+ * storage instead to implement persistent state.
+ */
 export class CheckOut {
 
+    /**
+     * Create a Checkout
+     *
+     * @param {object} pricingRules
+     */
     constructor(pricingRules) {
         this.pricingRules = pricingRules;
         this.items = [];
@@ -45,7 +24,8 @@ export class CheckOut {
 
     /**
      * Add an item to the current checkout
-     * @param {string} itemCode
+     *
+     * @param {string} productCode
      */
     add(productCode) {
         this.items.push(productCode);
@@ -53,23 +33,15 @@ export class CheckOut {
 
     /**
      * Calculate the total cost of the current items, applying relevant customer discounts
+     *
      * @return {Number} Total cost
      */
     total() {
         const bill = new Bill();
         for ( const productCode of this.items ) {
-            const price = Product.load(productCode).price;
-            bill.add(productCode, price);
+            bill.add(productCode);
         }
-
-        for ( const priceDeal of this.pricingRules.priceDeals ) {
-            priceDeal.apply(bill);
-        }
-
-        for ( const nForMDeal of this.pricingRules.nForMDeals ) {
-            nForMDeal.apply(bill);
-        }
-
+        bill.applyDeals(this.pricingRules);
         return bill.total();
     }
 }

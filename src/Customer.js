@@ -1,24 +1,27 @@
-import * as _ from "lodash";
+
+import {customerLookup} from "./_fakeDB";
 
 
-class Customer {
+export class Customer {
 
+    /**
+     * Create a Customer
+     *
+     * @param {Number} id
+     * @param {string} name
+     */
     constructor(id, name) {
         this.id = id;
         this.name = name;
     }
 
+    /**
+     * Load a customer record from state/storage
+     *
+     * @param {Number} id
+     */
     static load(id) {
-        return customerLookup[id];
+        return new Customer(...customerLookup[id]);
     }
 }
 
-// FIX ME - move data to DB
-const customers = [
-    new Customer(1, 'SecondBite'),
-    new Customer(2, 'Axil Coffee Roasters'),
-    new Customer(3, 'MYER'),
-    new Customer(4, 'default'),
-];
-
-const customerLookup = _.keyBy(customers, o => o.id);
