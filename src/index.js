@@ -5,12 +5,11 @@ import {CheckOut} from "./CheckOut";
 console.info('Not yet implemented');
 
 
-// trigger a price deal only
 let customerId = 5;
 let pricingRules = getPricingRules(customerId);
 let checkOut = new CheckOut(pricingRules);
 
-for (let i = 0; i < 26; i++) {
+for (let i = 0; i < 10000; i++) {
     checkOut.add('classic');
 }
 

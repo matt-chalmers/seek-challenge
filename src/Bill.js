@@ -139,8 +139,10 @@ export class Bill {
         let nForMAllocationPlan = NForMDeal.findBestAllocationPlan(nForMDeals, productItems.length, stdPrice, price);
         logger.debug('_applyProductDeals - nForMAllocationPlan for %d %s = %j, rules = %j', productItems.length, productCode, nForMAllocationPlan, pricingRules);
         for (const {deal, allocation} of nForMAllocationPlan) {
-            let dealItems = remainingProductItems.splice(0, allocation);
-            deal.apply(dealItems);
+            if (deal) {
+                let dealItems = remainingProductItems.splice(0, allocation * deal.purchaseSize);
+                deal.apply(dealItems);
+            }
         }
 
         if (priceDeal) {

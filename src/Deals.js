@@ -3,6 +3,7 @@ import * as _ from "lodash";
 
 import logger from './logging';
 import {nForMDealLookup, priceDealLookup} from "./_fakeDB";
+import {greedyBandBPlan} from "./Algorithms/GreedyBandB";
 
 
 /**
@@ -150,14 +151,7 @@ export class NForMDeal extends AbstractDeal {
      *        is much more likely to run quite quickly due to branch pruning
      *
      * For this example I'm going to take the optimistic route and apply a mix of Greedy programming and
-     * the branch and bound approach, with a depth-first tree walk. Our tree walk will process deals
-     * *greedily* in order of *ascending cost-per-unit*, thus allowing us to abort the search early if we
-     * reach an exact match where our deal allocation exactly covers the total number of required items -
-     * in this situation we know that any further branches will be sub-optimal.
-     *
-     * The below code uses a simple recursive tree-walk for readability. The same algorithm could
-     * be applied without recursion by using a stack, but I think that would be performance
-     * overkill and would be hard to read and understand for most code reviewers.
+     * the branch and bound approach.
      *
      * @param {NForMDeal[]} deals
      * @param {Number} numItems - the number of items to allocate
@@ -165,34 +159,32 @@ export class NForMDeal extends AbstractDeal {
      * @param {Number} discountPrice - the price we can charge for items not allocated to an NForMDeal
      */
     static findBestAllocationPlan(deals, numItems, stdPrice, discountPrice) {
-        let result = {
-            cost: null,
-            allocations: [],
-        };
 
         // Trim down the problem space - avoid searching against pointless deals.
-        deals = deals.filter(deal => (deal.effectivePrice(stdPrice) < discountPrice) && (deal.purchaseSize <= numItems));
+        deals = deals.filter(deal => (deal.effectivePrice(stdPrice) < discountPrice));
         if (deals.length === 0) {
             return [];
         }
 
-        /* Sort the deals by ascending effective price to ensure we try the lowest cost deals first, this will allow us
-           to abort early if we get an exact match.
+        let bAndBAlgItems = deals.map(deal => ({
+            weight: deal.purchaseSize,
+            cost: deal.effectivePrice(stdPrice) * deal.costSize,
+            deal: deal,
+        }));
+        // Presort by weight, as it looks better in the output to choose bigger deals when a big deal
+        // happens to have the same effective price as a smaller deal.
+        bAndBAlgItems = _.sortBy(bAndBAlgItems, 'weight').reverse();
+        // Add a single item purchase option for the algorithm to complete the matches
+        bAndBAlgItems.push({weight: 1, cost: discountPrice, deal: null});
 
-           Also pre-sort the deals by descending purchase size so that the algorithm will try the bigger
-           packages first whenever two deals have the same effective price - doesn't improve the cost outcome, just
-           affects the bill representation in the end.
+        let plan = greedyBandBPlan(bAndBAlgItems, numItems);
 
-           NB: Use Underscore as it has a stable-sort implementation.
-        */
-        deals = _.sortBy(deals, 'purchaseSize').reverse();
-        deals = _.sortBy(deals, 'discountPercent').reverse();
+        let allocations = plan.map(x => ({
+            deal: x.item.deal,
+            allocation: x.allocation,
+        }));
 
-        //console.time('_findBestAllocationTreeWalk');
-        this._findBestAllocationTreeWalk(deals, 0, numItems, 0, [], stdPrice, discountPrice, result);
-        //console.timeEnd('_findBestAllocationTreeWalk');
-
-        return result.allocations;
+        return allocations;
     }
 
     /**
