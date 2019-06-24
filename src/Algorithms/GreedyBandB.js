@@ -2,32 +2,40 @@ import * as _ from "lodash";
 
 
 /**
- * Determine the most cost efficient way to exactly fill a Knapsack with a certain weight.
+ * Determine the most cost efficient way to exactly fill a Knapsack with a certain weight
+ * using an unlimited supply of items.
  *
  * What sort of problems might need this?
  *
- * One example is a shopping cart applying bulk discounts. When it gets time to checkout you
- * need to be able to assign the available discounts against the items in such a way as to
- * minimise the total purchase cost for the consumer. For instance the consumer wants to buy
- * X items, with 3 discounts available - a 6-for-4 deal, a 20-for-12 deal, and a 30-for-15 deal.
- * What is the best way to allocate these deals to the X items being purchased?
+ * Example:
+ *    A shopping cart applying bulk discounts. When it gets time to checkout you
+ *    need to be able to assign the available discounts against the items in such a way as to
+ *    minimise the total purchase cost for the consumer.
  *
- * For small numbers of deals and items this is a quick problem to solve. But for large inputs
+ *    For instance the consumer wants to buy X items, with 3 discounts available - a 6-for-4 deal,
+ *    a 20-for-12 deal, and a 30-for-15 deal. What is the best way to allocate these deals to the
+ *    X items being purchased?
+ *
+ *    This is akin to filling a knapsack where the target weight for the knapsack = the total number
+ *    of items being bought, and the cost and weight of the available items is given by the discount
+ *    deals - e.g. a 6-for-4 deal defines a knapsack item type with weight = 6 and cost = (price * 4).
+ *
+ * For small numbers of deals and item types this is a quick problem to solve. But for large inputs
  * and worst-case data it is a computationally difficult problem, a slight variation on the
  * standard Knapsack problem or M-Partition problem.
  *
  * Here we're going to take an optimistic approach and apply a mix of greedy programming and
  * the branch and bound algorithm, with a depth-first tree walk to fill the knapsack. Our tree
- * walk will process items *greedily* in order of *ascending cost-per-unit*, which will yield
+ * walk will process item types *greedily* in order of *ascending cost-per-unit*, which will yield
  * opportunities for branch pruning.
  *
  * The below code uses a simple recurson for readability. The same algorithm could
  * be applied without recursion by using a stack, but I think that would be performance
  * overkill and would be harder to read and understand for most code reviewers.
  *
- * @param {[]} items with cost and weight
+ * @param {[]} items - the item types with cost and weight
  * @param {Number} targetWeight - weight the Knapsack must hold in the end
- * @return {Array} Return an array of any allocated items along with their allocation value
+ * @return {Array} Return an array of any allocated item types along with their allocation value
  */
 export function greedyBandBPlan(items, targetWeight) {
     let result = {
@@ -53,7 +61,7 @@ export function greedyBandBPlan(items, targetWeight) {
 /**
  * Recursive tree walk to find the minimum cost way to meet the target weight.
  *
- * @param {Array} items - assumed to be ordered by descending profitability
+ * @param {Array} items - the item types, assumed to be ordered by descending profitability
  * @param {Number} targetWeight - remaining target weight to achieve
  * @param {Number} totalCost - the cost of all items already allocated
  * @param {Array}  allocations - an array tracking the allocations made so far
