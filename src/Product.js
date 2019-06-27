@@ -25,7 +25,11 @@ export class Product {
      * @param {Number} id
      */
     static load(code) {
-        return new this(...productLookup[code]);
+        const data = productLookup[code];
+        if (! data) {
+            throw new Error('Missing product');
+        }
+        return new this(...data);
     }
 }
 

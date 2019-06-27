@@ -56,7 +56,7 @@ export class PriceDeal extends AbstractDeal {
 
     static load(customerId) {
         let deals = priceDealLookup[customerId] || [];
-        return deals.map(dealData => new PriceDeal(...dealData));
+        return deals.map(dealData => new this(...dealData));
     }
 }
 
@@ -98,7 +98,7 @@ export class NForMDeal extends AbstractDeal {
 
     static load(customerId) {
         let deals = nForMDealLookup[customerId] || [];
-        return deals.map(dealData => new NForMDeal(...dealData));
+        return deals.map(dealData => new this(...dealData));
     }
 
     /**

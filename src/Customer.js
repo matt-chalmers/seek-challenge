@@ -21,7 +21,11 @@ export class Customer {
      * @param {Number} id
      */
     static load(id) {
-        return new this(...customerLookup[id]);
+        const data = customerLookup[id];
+        if (! data) {
+            throw new Error('Missing customer');
+        }
+        return new this(...data);
     }
 }
 
