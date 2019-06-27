@@ -1,3 +1,8 @@
+/**
+ * The Bill module is a debatable choice. It's there to represent the detailed view
+ * of a customer's cost structure, and allow debugging of the outputs based on that
+ * structure, but it could potentially be inlined into the Checkout class instead.
+ */
 
 import * as _ from "lodash";
 
