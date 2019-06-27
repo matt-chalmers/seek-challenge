@@ -118,19 +118,6 @@ export class NForMDeal extends AbstractDeal {
      * and worst-case data it is a computationally hard problem, a slight variation on the
      * Knapsack problem or M-Partition problem.
      *
-     * Best approach?
-     *      - The standard dynamic programming method provides decent worst-case complexity O(NW)
-     *        and would be a reasonable choice
-     *
-     *      - Greedy algorithms are likely to yield a significant speed-up given purchasing behaviour
-     *        will likely match up against the discount multiples
-     *
-     *      - Branch and bound algorithms have a relatively poor worst-case complexity O(2^N), but it
-     *        is much more likely to run quite quickly due to branch pruning
-     *
-     * For this example I'm going to take the optimistic route and apply a mix of Greedy programming and
-     * the branch and bound approach.
-     *
      * @param {NForMDeal[]} deals
      * @param {Number} numItems - the number of items to allocate
      * @param {Number} stdPrice - the ordinary price to charge for this product inside an NForMDeal
