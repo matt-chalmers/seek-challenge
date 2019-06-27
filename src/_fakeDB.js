@@ -1,7 +1,7 @@
 
 import * as _ from "lodash";
 import {Customer} from "./Customer";
-import {NForMDeal, PriceDeal} from "./Deals";
+import {NForMDeal, PriceDeal} from "./Pricing";
 import {Product} from "./Product";
 
 

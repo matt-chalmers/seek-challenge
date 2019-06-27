@@ -1,7 +1,7 @@
 
 
 import {BillItem} from "../src/Bill";
-import {Discount} from "../src/Deals";
+import {Discount} from "../src/Pricing";
 
 describe("Bill Tests", function() {
 

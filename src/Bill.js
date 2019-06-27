@@ -8,7 +8,7 @@ import * as _ from "lodash";
 
 import logger from './logging';
 import {Product} from "./Product";
-import {NForMDeal} from "./Deals";
+import {NForMDeal} from "./Pricing";
 
 
 /**

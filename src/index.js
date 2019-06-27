@@ -1,4 +1,4 @@
-import {getPricingRules} from "./Deals";
+import {getPricingRules} from "./Pricing";
 import {CheckOut} from "./CheckOut";
 
 

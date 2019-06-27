@@ -5,7 +5,7 @@
  all the code layers, but I will use this module to provide us some higher level coverage as well.
  */
 
-import {getPricingRules} from "../src/Deals";
+import {getPricingRules} from "../src/Pricing";
 import {CheckOut} from "../src/CheckOut";
 
 describe("Integrated Checkout Tests", function() {
