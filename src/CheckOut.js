@@ -1,5 +1,4 @@
 
-import {Product} from "./Product";
 import {Bill} from "./Bill";
 
 
@@ -15,7 +14,7 @@ export class CheckOut {
     /**
      * Create a Checkout
      *
-     * @param {object} pricingRules
+     * @param {PricingRules} pricingRules
      */
     constructor(pricingRules) {
         this.pricingRules = pricingRules;
@@ -37,11 +36,8 @@ export class CheckOut {
      * @return {Number} Total cost
      */
     total() {
-        const bill = new Bill();
-        for ( const productCode of this.items ) {
-            bill.add(productCode);
-        }
-        bill.applyDeals(this.pricingRules);
+        const bill = new Bill(this.items);
+        this.pricingRules.apply(bill);
         return bill.total();
     }
 }

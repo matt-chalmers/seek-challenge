@@ -1,4 +1,4 @@
-import {getPricingRules} from "./Pricing";
+import {PricingRules} from "./Pricing";
 import {CheckOut} from "./CheckOut";
 
 
@@ -6,7 +6,7 @@ console.info('Not yet implemented');
 
 
 let customerId = 5;
-let pricingRules = getPricingRules(customerId);
+let pricingRules = PricingRules.load(customerId);
 let checkOut = new CheckOut(pricingRules);
 
 for (let i = 0; i < 10000; i++) {

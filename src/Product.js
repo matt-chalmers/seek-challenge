@@ -25,7 +25,7 @@ export class Product {
      * @param {Number} id
      */
     static load(code) {
-        return new Product(...productLookup[code]);
+        return new this(...productLookup[code]);
     }
 }
 

@@ -21,7 +21,7 @@ export class Customer {
      * @param {Number} id
      */
     static load(id) {
-        return new Customer(...customerLookup[id]);
+        return new this(...customerLookup[id]);
     }
 }
 

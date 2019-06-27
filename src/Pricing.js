@@ -4,27 +4,7 @@ import * as _ from "lodash";
 import logger from './logging';
 import {nForMDealLookup, priceDealLookup} from "./_fakeDB";
 import {greedyBandBPlan} from "./Algorithms/GreedyBandB";
-
-
-/**
- * Describes a discount applied to a BillItem
- */
-export class Discount {
-    /**
-     * Create a Discount
-     *
-     * @param {string} type
-     * @param {string} description
-     * @param {Number} amount
-     */
-    constructor(type, description, amount) {
-        this.type = type;
-        this.description = description;
-        this.amount = amount;
-    }
-}
-
-// TODO - make concrete discount classes to lock down the "type"
+import {Product} from "./Product";
 
 
 /**
@@ -70,7 +50,7 @@ export class PriceDeal extends AbstractDeal {
 
     apply(billItems) {
         for ( const item of billItems ) {
-            item.discount = new Discount("PriceDeal", 'price discount deal', Math.max(item.price - this.price, 0));
+            item.setDiscount("PriceDeal", 'price discount deal', Math.max(item.price - this.price, 0));
         }
     };
 
@@ -109,7 +89,7 @@ export class NForMDeal extends AbstractDeal {
             batch.forEach(
                 (item, idx) => {
                     if ( idx >= this.costSize ) {
-                        item.discount = new Discount("NForMDeal", this.description, item.total());
+                        item.setDiscount("NForMDeal", this.description, item.total());
                     }
                 }
             );
@@ -120,8 +100,6 @@ export class NForMDeal extends AbstractDeal {
         let deals = nForMDealLookup[customerId] || [];
         return deals.map(dealData => new NForMDeal(...dealData));
     }
-
-    get discountPercent() { return 100 * (1 - (this.costSize / this.purchaseSize)); }
 
     /**
      * Calculate the resulting price of a product when this deal is applied
@@ -194,10 +172,97 @@ export class NForMDeal extends AbstractDeal {
  *
  * @param {Number} customerId
  */
-export function getPricingRules(customerId) {
-    return {
-        priceDeals: PriceDeal.load(customerId),
-        nForMDeals: NForMDeal.load(customerId),
+
+export class PricingRules {
+    constructor(priceDeals, nForMDeals) {
+        this.priceDeals = priceDeals;
+        this.nForMDeals = nForMDeals;
+    }
+
+    /**
+     * Apply this pricing model to a Bill
+     *
+     * @param {Bill} bill
+     */
+    apply(bill) {
+        for (const item of bill.items) {
+            item.price = Product.load(item.productCode).price;
+            item.discount = null;
+        }
+
+        let productGroups = _.groupBy(bill.items, 'productCode');
+
+        for (const [productCode, productItems] of Object.entries(productGroups)) {
+            this._applyProductDeals(productCode, productItems);
+        }
+    }
+
+    /**
+     * Apply any discounts applicable to a specific product
+     *
+     * @param {string} productCode
+     * @param {BillItem[]} productItems
+     * @private
+     */
+    _applyProductDeals(productCode, productItems) {
+
+        // determine pricing to apply
+
+        const stdPrice = Product.load(productCode).price;
+
+        let {priceDeal, nForMDeals} = this._resolveProductDeals(productCode, stdPrice);
+        if ((!priceDeal) && (nForMDeals.length === 0)) {
+            return; // No deals to apply
+        }
+
+        let price = priceDeal ? priceDeal.price : stdPrice;
+
+
+        // Now apply all the deals
+
+        const remainingProductItems = [...productItems];
+
+        let nForMAllocationPlan = NForMDeal.findBestAllocationPlan(nForMDeals, productItems.length, stdPrice, price);
+        logger.debug('_applyProductDeals - nForMAllocationPlan for %d %s = %j, rules = %j', productItems.length, productCode, nForMAllocationPlan, {priceDeal, nForMDeals});
+        for (const {deal, allocation} of nForMAllocationPlan) {
+            if (deal) {
+                let dealItems = remainingProductItems.splice(0, allocation * deal.purchaseSize);
+                deal.apply(dealItems);
+            }
+        }
+
+        if (priceDeal) {
+            priceDeal.apply(remainingProductItems);
+        }
+    }
+
+    /**
+     * Determine the best discounts applicable to a specific product.
+     *
+     * @param {string} productCode
+     * @param {Number} productPrice
+     * @return {object} A deal lookup by type
+     * @private
+     */
+    _resolveProductDeals(productCode, productPrice) {
+        let priceDeal = null;
+        let pricingDeals = this.priceDeals.filter(
+            deal => (deal.productCode === productCode) && (deal.price < productPrice)
+        );
+        if (pricingDeals.length) {
+            priceDeal = _.minBy(pricingDeals, 'price');
+        }
+
+        let nForMDeals = this.nForMDeals.filter(
+            deal => (deal.productCode === productCode) && (deal.effectivePrice(productPrice) < productPrice)
+        );
+
+        return {priceDeal, nForMDeals};
+    }
+
+
+    static load(customerId) {
+        return new this(PriceDeal.load(customerId), NForMDeal.load(customerId));
     }
 }
 
