@@ -8,27 +8,36 @@ const logger = winston.createLogger({
     transports: []
 });
 
+const fileFormat = () => {
+    return winston.format.combine(
+        winston.format.splat(),
+        winston.format.timestamp(),
+        winston.format.json()
+    );
+};
+
+const readableFileFormat = () => {
+    return winston.format.combine(
+        winston.format.splat(),
+        winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    );
+};
+
+
 if (config.logging.fileLogging) {
     // Write all logs error (and below) to `error.log`.
     logger.add(
         new winston.transports.File({
             filename: 'logs/error.log',
-            format: winston.format.combine(
-                winston.format.splat(),
-                winston.format.timestamp(),
-                winston.format.json()
-            ),
+            format: fileFormat(),
             level: 'error'
         })
     );
     logger.add(
         new winston.transports.File({
             filename: 'logs/error-readable.log',
-            format: winston.format.combine(
-                winston.format.splat(),
-                winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
-                winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
-            ),
+            format: readableFileFormat(),
             level: 'error'
         })
     );
@@ -36,21 +45,13 @@ if (config.logging.fileLogging) {
     // Write to all logs with level `info` and below to `application.log`
     logger.add(
         new winston.transports.File({
-            format: winston.format.combine(
-                winston.format.splat(),
-                winston.format.timestamp(),
-                winston.format.json()
-            ),
+            format: fileFormat(),
             filename: 'logs/application.log'
         })
     );
     logger.add(
         new winston.transports.File({
-            format: winston.format.combine(
-                winston.format.splat(),
-                winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
-                winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
-            ),
+            format: readableFileFormat(),
             filename: 'logs/application-readable.log'
         })
     );
