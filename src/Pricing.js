@@ -3,7 +3,7 @@ import * as _ from "lodash";
 
 import logger from './logging';
 import {nForMDealLookup, priceDealLookup} from "./_fakeDB";
-import {greedyBandBPlan} from "./Algorithms/GreedyBandB";
+import {greedyBandBPlan as knapsackSolve} from "./Algorithms/GreedyBandB";
 import {Product} from "./Product";
 
 
@@ -144,18 +144,18 @@ export class NForMDeal extends AbstractDeal {
             return [];
         }
 
-        let bAndBAlgItems = deals.map(deal => ({
+        let knapsackItems = deals.map(deal => ({
             weight: deal.purchaseSize,
             cost: deal.effectivePrice(stdPrice) * deal.costSize,
             deal: deal,
         }));
         // Presort by weight, as it looks better in the output to choose bigger deals when a big deal
         // happens to have the same effective price as a smaller deal.
-        bAndBAlgItems = _.sortBy(bAndBAlgItems, 'weight').reverse();
+        knapsackItems = _.sortBy(knapsackItems, 'weight').reverse();
         // Add a single item purchase option for the algorithm to complete the matches
-        bAndBAlgItems.push({weight: 1, cost: discountPrice, deal: null});
+        knapsackItems.push({weight: 1, cost: discountPrice, deal: null});
 
-        let plan = greedyBandBPlan(bAndBAlgItems, numItems);
+        let plan = knapsackSolve(knapsackItems, numItems);
 
         let allocations = plan.map(x => ({
             deal: x.item.deal,
