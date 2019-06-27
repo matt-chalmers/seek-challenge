@@ -39,7 +39,7 @@ import * as _ from "lodash";
  * walk will process item types *greedily* in order of *ascending cost-per-unit*, which will yield
  * opportunities for branch pruning.
  *
- * The below code uses a simple recurson for readability. The same algorithm could
+ * The below code uses a simple recursion for readability. The same algorithm could
  * be applied without recursion by using a stack, but I think that would be performance
  * overkill and would be harder to read and understand for most code reviewers.
  *
