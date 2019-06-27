@@ -5,7 +5,7 @@ import {Customer} from "../src/Customer";
 describe("Customer Tests", function() {
 
     test("Load Customer", function () {
-        let customer = Customer.load(5);
+        const customer = Customer.load(5);
         expect([
             customer.id,
             customer.name

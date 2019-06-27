@@ -14,9 +14,9 @@ describe("Integrated Checkout Tests", function() {
         // These are the example tests provided in the challenge specification
 
         test("Example Test 1", function () {
-            let customerId = 4;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 4;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             checkOut.add('classic');
             checkOut.add('standout');
@@ -26,9 +26,9 @@ describe("Integrated Checkout Tests", function() {
         });
 
         test("Example Test 2", function () {
-            let customerId = 1;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 1;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             checkOut.add('classic');
             checkOut.add('classic');
@@ -39,9 +39,9 @@ describe("Integrated Checkout Tests", function() {
         });
 
         test("Example Test 3", function () {
-            let customerId = 2;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 2;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             checkOut.add('standout');
             checkOut.add('standout');
@@ -56,9 +56,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Single NForM Deal", function () {
             // buy enough items to trigger a single deal
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 6; i++) {
                 checkOut.add('classic');
@@ -69,9 +69,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Single NForM Deal + extra item", function () {
             // buy enough items to trigger a single deal + one extra item at full price
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 7; i++) {
                 checkOut.add('classic');
@@ -82,9 +82,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Single NForM Deal Repeated", function () {
             // buy enough items to trigger a deal twice
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 12; i++) {
                 checkOut.add('classic');
@@ -95,9 +95,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Single NForM Deal Repeated + extra item", function () {
             // buy enough items to trigger a deal twice + one extra item at full price
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 13; i++) {
                 checkOut.add('classic');
@@ -108,9 +108,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Two NForM Deals", function () {
             // buy enough items to trigger two different deals at the same time
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 26; i++) {
                 checkOut.add('premium');
@@ -121,9 +121,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Two NForM Deals  + extra item", function () {
             // buy enough items to trigger two different deals at the same time + one extra item at full price
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 27; i++) {
                 checkOut.add('premium');
@@ -134,9 +134,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Price Deal", function () {
             // trigger a price deal only
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 2; i++) {
                 checkOut.add('standout');
@@ -147,9 +147,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("Price Trumps NForM", function () {
             // test Price deals can beat NForM deals
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 2; i++) {
                 checkOut.add('test1');
@@ -160,9 +160,9 @@ describe("Integrated Checkout Tests", function() {
 
         test("NForM Trumps Price", function () {
             //test NForM deals can beat price deals
-            let customerId = 5;
-            let pricingRules = PricingRules.load(customerId);
-            let checkOut = new CheckOut(pricingRules);
+            const customerId = 5;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
 
             for (let i = 0; i < 2; i++) {
                 checkOut.add('test2');

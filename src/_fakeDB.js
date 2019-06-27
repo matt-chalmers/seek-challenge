@@ -17,6 +17,7 @@ const customers = [
     [3, 'MYER'],
     [4, 'default'],
     [5, 'TEST'],
+    [6, 'TEST2'],
 ];
 
 export const customerLookup = _.keyBy(customers, 0);
@@ -72,6 +73,8 @@ const priceDeals = [
     [5, 'standout', 299.99],
     [5, 'test1', 150],
     [5, 'test1', 200],
+    [6, 'test1', 150],
+    [6, 'test1', 200],
 
 ];
 
@@ -94,6 +97,9 @@ const nForMDeals = [
 
     [5, 'test1', 2, 1], // not as good as the price deal
     [5, 'test2', 2, 1], // better than the price deal
+
+    [6, 'test1', 2, 1],
+    [6, 'test2', 5, 2],
 ];
 
 
