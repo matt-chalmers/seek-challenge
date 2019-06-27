@@ -167,12 +167,6 @@ export class NForMDeal extends AbstractDeal {
 }
 
 
-/**
- * Load a pricing rules for a given customer from state/storage
- *
- * @param {Number} customerId
- */
-
 export class PricingRules {
     constructor(priceDeals, nForMDeals) {
         this.priceDeals = priceDeals;
@@ -260,7 +254,11 @@ export class PricingRules {
         return {priceDeal, nForMDeals};
     }
 
-
+    /**
+     * Load a pricing rules for a given customer from state/storage
+     *
+     * @param {Number} customerId
+     */
     static load(customerId) {
         return new this(PriceDeal.load(customerId), NForMDeal.load(customerId));
     }
