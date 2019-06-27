@@ -37,7 +37,7 @@ import * as _ from "lodash";
  * @param {Number} targetWeight - weight the Knapsack must hold in the end
  * @return {Array} Return an array of any allocated item types along with their allocation value
  */
-export function greedyBandBPlan(items, targetWeight) {
+export function knapsackCostSolve(items, targetWeight) {
     let result = {
         cost: null,
         allocations: [],

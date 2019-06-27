@@ -3,7 +3,7 @@ import * as _ from "lodash";
 
 import logger from './logging';
 import {nForMDealLookup, priceDealLookup} from "./_fakeDB";
-import {greedyBandBPlan as knapsackSolve} from "./Algorithms/GreedyBandB";
+import {knapsackCostSolve} from "./Algorithms/KnapSackCostSolver";
 import {Product} from "./Product";
 
 
@@ -155,7 +155,7 @@ export class NForMDeal extends AbstractDeal {
         // Add a single item purchase option for the algorithm to complete the matches
         knapsackItems.push({weight: 1, cost: discountPrice, deal: null});
 
-        let plan = knapsackSolve(knapsackItems, numItems);
+        let plan = knapsackCostSolve(knapsackItems, numItems);
 
         let allocations = plan.map(x => ({
             deal: x.item.deal,
