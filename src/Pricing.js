@@ -40,12 +40,14 @@ export class PriceDeal extends AbstractDeal {
      * @param {Number} customerId
      * @param {string} productCode
      * @param {Number} price
+     * @param {Number|undefined|null} triggerSize - the number of items that must be purchased to trigger this deal
      */
-    constructor(customerId, productCode, price) {
+    constructor(customerId, productCode, price, triggerSize) {
         super();
         this.customerId = customerId;
         this.productCode = productCode;
         this.price = price;
+        this.triggerSize = triggerSize || 0;
     }
 
     apply(billItems) {
@@ -191,7 +193,7 @@ export class PricingRules {
 
         const stdPrice = Product.load(productCode).price;
 
-        let {priceDeal, nForMDeals} = this._resolveProductDeals(productCode, stdPrice);
+        let {priceDeal, nForMDeals} = this._resolveProductDeals(productCode, stdPrice, productItems.length);
         if ((!priceDeal) && (nForMDeals.length === 0)) {
             return; // No deals to apply
         }
@@ -222,13 +224,17 @@ export class PricingRules {
      *
      * @param {string} productCode
      * @param {Number} productPrice
+     * @param {Number} numItems
      * @return {object} A deal lookup by type
      * @private
      */
-    _resolveProductDeals(productCode, productPrice) {
+    _resolveProductDeals(productCode, productPrice, numItems) {
         let priceDeal = null;
         let pricingDeals = this.priceDeals.filter(
-            deal => (deal.productCode === productCode) && (deal.price < productPrice)
+            deal =>
+                (deal.productCode === productCode) &&
+                (deal.price < productPrice) &&
+                (deal.triggerSize <= numItems)
         );
         if (pricingDeals.length) {
             priceDeal = _.minBy(pricingDeals, 'price');

@@ -40,11 +40,13 @@ describe("Pricing Tests", function() {
                     customerId: 6,
                     productCode: 'test1',
                     price: 150,
+                    triggerSize: 0,
                 },
                 {
                     customerId: 6,
                     productCode: 'test1',
                     price: 200,
+                    triggerSize: 0,
                 },
             ]);
         });

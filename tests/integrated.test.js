@@ -132,7 +132,7 @@ describe("Integrated Checkout Tests", function() {
             expect(checkOut.total()).toBeCloseTo(6714.83, 5);
         });
 
-        test("Price Deal", function () {
+        test("Price Deal - No trigger", function () {
             // trigger a price deal only
             const customerId = 5;
             const pricingRules = PricingRules.load(customerId);
@@ -143,6 +143,43 @@ describe("Integrated Checkout Tests", function() {
             }
 
             expect(checkOut.total()).toBeCloseTo(599.98, 5);
+        });
+
+        test("Price Deal - Trigger", function () {
+            // trigger a price deal only
+            const customerId = 7;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
+
+            for (let i = 0; i < 3; i++) {
+                checkOut.add('test1');
+            }
+
+            expect(checkOut.total()).toBeCloseTo(450, 5);
+        });
+
+        test("Price Deal - Not triggered - Fallback Deal", function () {
+            // Don't trigger a price deal below threshhold
+            const customerId = 7;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
+
+            for (let i = 0; i < 2; i++) {
+                checkOut.add('test1');
+            }
+
+            expect(checkOut.total()).toBeCloseTo(400, 5);
+        });
+
+        test("Price Deal - Not triggered - No Fallback", function () {
+            // Don't trigger a price deal below threshhold
+            const customerId = 7;
+            const pricingRules = PricingRules.load(customerId);
+            const checkOut = new CheckOut(pricingRules);
+
+            checkOut.add('test1');
+
+            expect(checkOut.total()).toBeCloseTo(394.99, 5);
         });
 
         test("Price Trumps NForM", function () {

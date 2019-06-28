@@ -18,6 +18,7 @@ const customers = [
     [4, 'default'],
     [5, 'TEST'],
     [6, 'TEST2'],
+    [7, 'TEST3'],
 ];
 
 export const customerLookup = _.keyBy(customers, 0);
@@ -70,11 +71,14 @@ const priceDeals = [
     [3, 'premium', 389.99],
 
     // test deals
-    [5, 'standout', 299.99],
-    [5, 'test1', 150],
-    [5, 'test1', 200],
-    [6, 'test1', 150],
-    [6, 'test1', 200],
+    [5, 'standout', 299.99, 0],
+    [5, 'test1', 150, 0],
+    [5, 'test1', 200, 0],
+    [6, 'test1', 150, 0],
+    [6, 'test1', 200, 0],
+    [7, 'test1', 150, 3],
+    [7, 'test1', 200, 2],
+
 
 ];
 
