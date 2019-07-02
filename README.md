@@ -3,7 +3,6 @@
 ## This is an WIP version, lots more tests required still!
 
 ## Coding Exercise
-We are interested in seeing your coding, problem solving and collaboration style. We would like you to build the following system. When you come to meet us for your programming interview, bring along your laptop or files, as you will be pairing with a SEEKer who will work with you on your solution to complete a stretch goal.
 For the purpose of this exercise, SEEK is in the process of rewriting its job ads checkout system. We want to offer different products to recruiters:
 
 
