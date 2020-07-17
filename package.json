@@ -20,7 +20,7 @@
   "homepage": "https://github.com/matt-chalmers/seek-challenge#readme",
   "dependencies": {
     "config": "^3.1.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "winston": "^3.2.1"
   },
   "devDependencies": {
